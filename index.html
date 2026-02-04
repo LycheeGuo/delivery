@@ -8,7 +8,7 @@
     :root {
       --primary-pink: #ff7eb3;
       --deep-purple: #4a2c40;
-      --glass-surface: rgba(255, 255, 255, 0.55); /* 稍微调高不透明度以适应长文字 */
+      --glass-surface: rgba(255, 255, 255, 0.55);
       --glass-border: rgba(255, 255, 255, 0.6);
       --glass-shadow: 0 8px 32px rgba(255, 126, 179, 0.15);
     }
@@ -55,7 +55,7 @@
       position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 40px 20px;
     }
 
-    /* === 4. 卡片样式优化 (适配长文案) === */
+    /* === 4. 卡片样式 === */
     .glass-card {
       background: var(--glass-surface);
       backdrop-filter: blur(30px) saturate(180%);
@@ -75,7 +75,7 @@
       text-shadow: 0 4px 10px rgba(255, 107, 107, 0.2);
     }
 
-    /* 针对文案的排版优化 */
+    /* 文案排版 */
     .anno-title {
       font-size: 20px; color: #b0003a; margin-top: 0; margin-bottom: 12px;
       display: flex; align-items: center; gap: 8px; border-bottom: 2px dashed rgba(176, 0, 58, 0.1);
@@ -90,7 +90,6 @@
     ul { padding-left: 0; list-style: none; }
     ul li { margin-bottom: 8px; }
     
-    .highlight { color: #d63384; font-weight: bold; }
     .warning-box { 
       background: rgba(255, 0, 0, 0.05); border: 1px solid rgba(255,0,0,0.1); 
       padding: 12px; border-radius: 12px; margin-top: 8px; color: #c00;
@@ -108,6 +107,12 @@
       box-shadow: 0 0 0 6px rgba(255, 126, 179, 0.3); transform: translateY(-2px);
     }
     input::placeholder { color: #aaa; font-weight: normal; }
+    
+    /* 专门的提示文本样式 */
+    .input-hint {
+        font-size: 13px; color: #b0003a; margin-top: 8px; margin-left: 10px; opacity: 0.8;
+        display: flex; align-items: center; gap: 4px;
+    }
 
     .btn-row { display: flex; gap: 12px; margin-top: 16px; }
     button {
@@ -124,7 +129,7 @@
     }
 
     /* === 6. 结果区域 === */
-    #result-container { display: none; } /* 初始隐藏 */
+    #result-container { display: none; }
     
     .result-box {
       margin-top: 20px; padding: 30px; border-radius: 24px;
@@ -202,7 +207,11 @@
       <h2 style="justify-content: center; margin-top:0; color:#4a2c40">🔍 查查我的礼物</h2>
       <div class="muted" id="updated" style="text-align:center; margin-bottom:15px;"></div>
 
-      <input id="q" placeholder="输入网名关键词（支持模糊搜索）..." autocomplete="off" />
+      <input id="q" placeholder="在此输入网名..." autocomplete="off" />
+      
+      <div class="input-hint">
+          <span>💡</span> 提示：请输入<b>去掉符号</b>的番茄昵称，符号可能导致查询失败哦。
+      </div>
 
       <div class="btn-row">
         <button id="btn" type="button">🐾 立即查询</button>
@@ -220,7 +229,6 @@
     const $container = document.getElementById("result-container");
     const $updated = document.getElementById("updated");
 
-    // ⚠️ 默认测试数据 (如果没连接 json 文件，就用这个测试)
     const DEFAULT_DATA = {
       lastUpdated: "2026.2.4",
       shippedNicks: [
@@ -245,7 +253,10 @@
       }
     }
 
-    function normalize(s){ return String(s || "").trim().toLowerCase(); }
+    function normalize(s){ 
+        // 去除空格并转小写
+        return String(s || "").trim().toLowerCase(); 
+    }
 
     function show(type, title, htmlContent){
       $container.style.display = "block";
@@ -261,7 +272,6 @@
         </div>
       `;
       
-      // 触发动画重绘
       const $box = $container.querySelector('.result-box');
       $box.style.animation = 'none';
       $box.offsetHeight; 
@@ -279,18 +289,16 @@
       const q = normalize(raw);
       const shipped = Array.isArray(DATA.shippedNicks) ? DATA.shippedNicks : [];
 
-      // 模糊匹配逻辑
-      const foundName = shipped.find(n => {
-          const name = normalize(n);
-          return name.includes(q) || q.includes(name);
-      });
+      // === 核心修改：精确匹配 (Exact Match) ===
+      // 使用 find 查找完全一致的名字（不区分大小写）
+      const foundName = shipped.find(n => normalize(n) === q);
 
       if(foundName){
         show("ok", "已发货啦！", 
             `你的宝贝已经在路上狂奔啦<br>匹配网名：<span class="matched-name">${foundName}</span><br>请留意京东快递哦～🚚💨`);
       }else{
         show("no", "暂未发货", 
-            `名单里没找到包含该关键词的名字<br>当前搜索：<b>${raw}</b><br>可能还没发出，或差异太大。`);
+            `未找到完全匹配的网名：<b>${raw}</b><br>请确认已去掉所有特殊符号且拼写正确。<br>（如：去掉★、emoji等）`);
       }
     }
 
