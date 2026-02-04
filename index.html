@@ -108,10 +108,33 @@
     }
     input::placeholder { color: #aaa; font-weight: normal; }
     
-    /* 专门的提示文本样式 */
+    /* === 核心修改：加强版提示 === */
     .input-hint {
-        font-size: 13px; color: #b0003a; margin-top: 8px; margin-left: 10px; opacity: 0.8;
-        display: flex; align-items: center; gap: 4px;
+        margin-top: 15px;
+        padding: 12px 15px;
+        background: #fff0f6; /* 浅粉色背景 */
+        border: 2px dashed #ff85c0; /* 醒目的虚线边框 */
+        border-radius: 16px;
+        color: #eb2f96; /* 深粉色文字 */
+        font-size: 16px; /* 加大字号 */
+        font-weight: 800; /* 更加粗 */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* 居中 */
+        gap: 8px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(235, 47, 150, 0.15);
+    }
+    
+    /* 让前面的灯泡跳动一下 */
+    .input-hint span {
+        font-size: 20px;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
     }
 
     .btn-row { display: flex; gap: 12px; margin-top: 16px; }
@@ -210,7 +233,7 @@
       <input id="q" placeholder="在此输入番茄昵称..." autocomplete="off" />
       
       <div class="input-hint">
-          <span>💡</span> 提示：请输入<b>去掉符号</b>的番茄昵称，符号可能导致查询失败哦。
+          <span>💡</span> 提示：务必输入【去掉符号】的番茄昵称，带符号可能会查不到哦！
       </div>
 
       <div class="btn-row">
@@ -290,7 +313,6 @@
       const shipped = Array.isArray(DATA.shippedNicks) ? DATA.shippedNicks : [];
 
       // === 核心修改：精确匹配 (Exact Match) ===
-      // 使用 find 查找完全一致的名字（不区分大小写）
       const foundName = shipped.find(n => normalize(n) === q);
 
       if(foundName){
@@ -298,7 +320,7 @@
             `你的礼物已经在路上狂奔啦<br><span class="matched-name">${foundName}</span><br>请留意京东快递哦～🚚💨`);
       }else{
         show("no", "暂未发货", 
-            `未找到完全匹配的网名：<b>${raw}</b><br>请确认已去掉所有特殊符号且拼写正确。<br>（如：去掉★、emoji等）`);
+            `未找到完全匹配的网名：<b>${raw}</b><br>请确认已去掉所有特殊符号且拼写正确。<br>（如：去掉^ . emoji等）`);
       }
     }
 
