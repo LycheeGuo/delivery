@@ -207,7 +207,7 @@
       <h2 style="justify-content: center; margin-top:0; color:#4a2c40">🔍 查查我的礼物</h2>
       <div class="muted" id="updated" style="text-align:center; margin-bottom:15px;"></div>
 
-      <input id="q" placeholder="在此输入网名..." autocomplete="off" />
+      <input id="q" placeholder="在此输入番茄昵称..." autocomplete="off" />
       
       <div class="input-hint">
           <span>💡</span> 提示：请输入<b>去掉符号</b>的番茄昵称，符号可能导致查询失败哦。
@@ -295,7 +295,7 @@
 
       if(foundName){
         show("ok", "已发货啦！", 
-            `你的宝贝已经在路上狂奔啦<br>匹配网名：<span class="matched-name">${foundName}</span><br>请留意京东快递哦～🚚💨`);
+            `你的宝贝已经在路上狂奔啦<br><span class="matched-name">${foundName}</span><br>请留意京东快递哦～🚚💨`);
       }else{
         show("no", "暂未发货", 
             `未找到完全匹配的网名：<b>${raw}</b><br>请确认已去掉所有特殊符号且拼写正确。<br>（如：去掉★、emoji等）`);
