@@ -3,78 +3,75 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>猫猫快递查询</title>
+  <title>猫猫发货查询</title>
   <style>
     :root{
-      --bg:#ffe6f0;
+      --bg1:#ffe6f0;
+      --bg2:#ffd1e5;
       --card:#ffffffcc;
       --pink:#ff5fa2;
       --pink2:#ff86ba;
       --text:#3a2b35;
+      --line:#ffd1e5;
+      --soft:#fff7fb;
     }
     body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei";
-      background: radial-gradient(1200px 600px at 20% 0%, #fff 0%, var(--bg) 55%, #ffd1e5 100%);
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei";
       color:var(--text);
       min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      background:
+        radial-gradient(1200px 600px at 15% 0%, #fff 0%, var(--bg1) 55%, var(--bg2) 100%);
+      display:flex; align-items:center; justify-content:center;
       padding:24px;
     }
-    .wrap{ width:min(720px, 100%); }
-    .header{
-      display:flex; gap:16px; align-items:center;
-      margin-bottom:16px;
-    }
+    .wrap{ width:min(920px, 100%); }
+    .header{ display:flex; align-items:center; gap:14px; margin-bottom:14px; }
     .cat{
-      width:64px; height:64px; flex:0 0 64px;
-      filter: drop-shadow(0 10px 18px rgba(255,95,162,.25));
+      width:66px; height:66px;
+      filter: drop-shadow(0 14px 24px rgba(255,95,162,.25));
+      animation: floaty 2.6s ease-in-out infinite;
     }
-    .title h1{ margin:0; font-size:22px; }
-    .title p{ margin:6px 0 0; opacity:.8; }
+    @keyframes floaty{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-4px); }
+    }
+    h1{ margin:0; font-size:22px; }
+    .sub{ margin:6px 0 0; opacity:.8; font-size:13px; line-height:1.4; }
     .card{
       background:var(--card);
-      border:1px solid #ffd1e5;
+      border:1px solid var(--line);
       border-radius:18px;
-      padding:18px;
+      padding:16px;
       box-shadow: 0 18px 40px rgba(0,0,0,.08);
       backdrop-filter: blur(10px);
     }
-    .row{ display:flex; gap:10px; flex-wrap:wrap; }
-    .row > * { flex:1; }
-    label{ font-size:12px; opacity:.8; display:block; margin:10px 0 6px; }
-    input, select{
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:end; }
+    .row > *{ flex:1; min-width: 220px; }
+    label{ display:block; font-size:12px; opacity:.8; margin:8px 0 6px; }
+    input{
       width:100%;
-      border:1px solid #ffd1e5;
+      border:1px solid var(--line);
       border-radius:12px;
-      padding:12px 12px;
+      padding:11px 12px;
       font-size:14px;
       outline:none;
       background:#fff;
     }
-    input:focus{ border-color: var(--pink2); box-shadow:0 0 0 4px rgba(255,134,186,.25); }
+    input:focus{
+      border-color: var(--pink2);
+      box-shadow:0 0 0 4px rgba(255,134,186,.25);
+    }
     button{
-      width:100%;
-      margin-top:12px;
-      border:0;
-      border-radius:14px;
-      padding:12px 14px;
-      font-size:15px;
-      color:#fff;
+      border:0; border-radius:14px;
+      padding:11px 14px;
+      font-size:15px; color:#fff;
       background: linear-gradient(135deg, var(--pink), var(--pink2));
       cursor:pointer;
-      box-shadow:0 14px 26px rgba(255,95,162,.25);
+      box-shadow:0 14px 26px rgba(255,95,162,.22);
+      white-space:nowrap;
     }
-    button:disabled{ opacity:.6; cursor:not-allowed; }
-    .result{
-      margin-top:14px;
-      padding:12px;
-      border-radius:14px;
-      border:1px dashed #ffb5d2;
-      background:#fff7fb;
-      display:none;
-    }
+    .stats{ display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; }
     .pill{
       display:inline-block;
       font-size:12px;
@@ -82,117 +79,258 @@
       border-radius:999px;
       background:#ffe1ef;
       border:1px solid #ffc2dc;
+    }
+    .muted{ opacity:.75; font-size:12px; }
+    .result{
+      margin-top:12px;
+      border:1px dashed #ffb5d2;
+      background:var(--soft);
+      border-radius:16px;
+      padding:12px;
+      display:none;
+    }
+    .badge{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid;
       margin-right:8px;
     }
-    .timeline{ margin-top:10px; }
-    .event{ padding:10px 0; border-top:1px solid #ffe1ef; }
-    .event:first-child{ border-top:0; }
-    .muted{ opacity:.75; font-size:12px; }
-    .err{ color:#b0003a; }
-    footer{ margin-top:12px; text-align:center; font-size:12px; opacity:.65; }
+    .ok{ background:#fff0f7; border-color:#ffb5d2; color:#b0003a; }
+    .no{ background:#f7fbff; border-color:#cbe2ff; color:#2457a6; }
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      margin-top:10px;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+    .table th, .table td{
+      padding:10px 10px;
+      border-bottom:1px solid #ffe1ef;
+      font-size:13px;
+      vertical-align:top;
+      text-align:left;
+    }
+    .table th{ background:var(--soft); font-weight:600; }
+    .empty{ padding:12px; font-size:13px; opacity:.75; }
+    .notice{
+      margin-top:14px;
+      border:1px dashed #ffb5d2;
+      background:var(--soft);
+      border-radius:16px;
+      padding:12px;
+    }
+    .notice h2{ font-size:15px; margin:0 0 6px; }
+    .notice ul{ margin:8px 0 0; padding-left:18px; }
+    .notice li{ margin:6px 0; font-size:13px; }
   </style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
+    <!-- 更萌的猫猫（大眼+腮红） -->
     <svg class="cat" viewBox="0 0 128 128" aria-hidden="true">
-      <path fill="#ff86ba" d="M24 52c0-18 10-32 24-40l8 24 8-24c14 8 24 22 24 40v36c0 14-12 26-24 26H72c-4 0-8-2-8-6s4-6 8-6h8c6 0 12-6 12-14V52c0-10-4-18-10-24l-6 18c-2 6-10 6-12 0l-6-18c-6 6-10 14-10 24v36c0 8 6 14 12 14h8c4 0 8 2 8 6s-4 6-8 6H60c-12 0-24-12-24-26V52z"/>
-      <circle cx="52" cy="70" r="6" fill="#3a2b35"/>
-      <circle cx="76" cy="70" r="6" fill="#3a2b35"/>
-      <path d="M62 80c2 2 2 2 4 0" stroke="#3a2b35" stroke-width="4" stroke-linecap="round"/>
-      <path d="M46 84c6 4 10 4 16 0M66 84c6 4 10 4 16 0" stroke="#ff5fa2" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ff86ba"/>
+          <stop offset="1" stop-color="#ff5fa2"/>
+        </linearGradient>
+      </defs>
+
+      <!-- 耳朵 -->
+      <path d="M28 42 L18 18 Q30 22 42 34 Z" fill="url(#g)"/>
+      <path d="M100 42 L110 18 Q98 22 86 34 Z" fill="url(#g)"/>
+
+      <!-- 脑袋 -->
+      <path d="M28 54
+               Q28 30 52 28
+               Q64 20 76 28
+               Q100 30 100 54
+               V76
+               Q100 104 64 104
+               Q28 104 28 76 Z"
+            fill="#ffd6e8" stroke="#ffb5d2" stroke-width="3" />
+
+      <!-- 内耳 -->
+      <path d="M30 40 L24 26 Q32 28 40 36 Z" fill="#ffb5d2" opacity=".85"/>
+      <path d="M98 40 L104 26 Q96 28 88 36 Z" fill="#ffb5d2" opacity=".85"/>
+
+      <!-- 眼睛（大眼+高光） -->
+      <ellipse cx="50" cy="66" rx="10" ry="12" fill="#3a2b35"/>
+      <ellipse cx="78" cy="66" rx="10" ry="12" fill="#3a2b35"/>
+      <circle cx="46" cy="62" r="3.2" fill="#fff"/>
+      <circle cx="74" cy="62" r="3.2" fill="#fff"/>
+
+      <!-- 腮红 -->
+      <circle cx="38" cy="76" r="6" fill="#ff86ba" opacity=".55"/>
+      <circle cx="90" cy="76" r="6" fill="#ff86ba" opacity=".55"/>
+
+      <!-- 鼻子嘴巴 -->
+      <path d="M62 74 L66 74 L64 77 Z" fill="#ff5fa2"/>
+      <path d="M64 78
+               Q60 82 56 80
+               M64 78
+               Q68 82 72 80"
+            fill="none" stroke="#3a2b35" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- 胡须 -->
+      <path d="M22 70 H42 M22 78 H40" stroke="#ff5fa2" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+      <path d="M86 70 H106 M88 78 H106" stroke="#ff5fa2" stroke-width="3" stroke-linecap="round" opacity=".8"/>
     </svg>
-    <div class="title">
-      <h1>猫猫快递查询</h1>
-      <p>输入手机号或网名，看看小包裹走到哪啦 🐾</p>
+
+    <div>
+      <h1>猫猫发货查询</h1>
+      <div class="sub">
+        输入网名查询是否已发货。<br>
+        说明：本页只维护“已发货名单”，不在名单里就视为未发货/未登记。
+      </div>
     </div>
   </div>
 
   <div class="card">
     <div class="row">
       <div>
-        <label>查询方式</label>
-        <select id="mode">
-          <option value="phone">手机号</option>
-          <option value="nick">网名</option>
-        </select>
+        <label>网名查询（支持模糊）</label>
+        <input id="q" placeholder="例如：云栖晚晚 / 小怡 / 梦梦 …" autocomplete="off" />
       </div>
-      <div>
-        <label>口令（可选，建议加一层保护）</label>
-        <input id="passcode" placeholder="例如群里发的 6 位码" />
+      <div style="flex:0 0 auto;">
+        <button id="clearBtn" type="button">清空</button>
       </div>
     </div>
 
-    <label id="keyLabel">手机号</label>
-    <input id="keyInput" placeholder="请输入手机号" />
-
-    <button id="btn">查询一下</button>
+    <div class="stats" id="stats"></div>
+    <div class="muted" id="updated"></div>
 
     <div class="result" id="result"></div>
-    <footer>只展示该手机号/网名对应的那一单；不公开你的个人信息。</footer>
+
+    <table class="table" id="table" aria-label="已发货名单">
+      <thead>
+        <tr>
+          <th style="width:60%;">网名（已发货）</th>
+          <th style="width:20%;">状态</th>
+          <th style="width:20%;">备注</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+
+    <div class="notice">
+      <h2>防骗提醒（请务必看）</h2>
+      <ul>
+        <li>我不会以“补邮费 / 改地址 / 重新派送 / 理赔”为由让你转账，也不会让你点不明链接。</li>
+        <li>任何人向你要验证码、银行卡信息、让你下载陌生 App、或让你付“解冻费/保管费”，一律当诈骗。</li>
+        <li>收到可疑短信/私聊：先别操作，直接截图发我确认。</li>
+        <li>本页面只用于公布发货进度，不作为收费、中奖、退款等通知依据。</li>
+      </ul>
+      <div class="muted" style="margin-top:8px;">建议：尽量只用网名/代号，不要在网页里放手机号和地址。</div>
+    </div>
   </div>
 </div>
 
 <script>
-  const API_BASE = "https://YOUR-WORKER.your-subdomain.workers.dev"; // 改成你的后端地址
+  const $q = document.getElementById("q");
+  const $tbody = document.getElementById("tbody");
+  const $stats = document.getElementById("stats");
+  const $updated = document.getElementById("updated");
+  const $clearBtn = document.getElementById("clearBtn");
+  const $result = document.getElementById("result");
 
-  const modeEl = document.getElementById("mode");
-  const labelEl = document.getElementById("keyLabel");
-  const inputEl = document.getElementById("keyInput");
-  const passEl  = document.getElementById("passcode");
-  const btnEl   = document.getElementById("btn");
-  const resEl   = document.getElementById("result");
+  let DATA = { lastUpdated: "", shippedNicks: [] };
 
-  modeEl.addEventListener("change", () => {
-    const m = modeEl.value;
-    labelEl.textContent = (m === "phone") ? "手机号" : "网名";
-    inputEl.placeholder = (m === "phone") ? "请输入手机号" : "请输入网名（你登记过的那个）";
-  });
-
-  function show(html, isErr=false){
-    resEl.style.display = "block";
-    resEl.innerHTML = isErr ? `<div class="err">${html}</div>` : html;
+  function normalize(s){
+    return String(s || "").trim().toLowerCase();
   }
 
-  btnEl.addEventListener("click", async () => {
-    const mode = modeEl.value;
-    const key = inputEl.value.trim();
-    const passcode = passEl.value.trim();
+  function showResult(html){
+    $result.style.display = "block";
+    $result.innerHTML = html;
+  }
 
-    if(!key) return show("你还没输入呢～", true);
+  function render(){
+    const qRaw = String($q.value || "").trim();
+    const q = normalize(qRaw);
 
-    btnEl.disabled = true;
-    show("猫猫正在蹲快递车…", false);
+    const shipped = (DATA.shippedNicks || []);
+    const shippedCount = shipped.length;
 
-    try{
-      const r = await fetch(API_BASE + "/api/query", {
-        method:"POST",
-        headers:{ "content-type":"application/json" },
-        body: JSON.stringify({ mode, key, passcode })
-      });
+    $stats.innerHTML = "";
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = `已发货人数：${shippedCount}`;
+    $stats.appendChild(pill);
 
-      const data = await r.json();
-      if(!r.ok) throw new Error(data?.message || "查询失败");
+    $updated.textContent = DATA.lastUpdated ? `最后更新：${DATA.lastUpdated}` : "";
 
-      const head = `
-        <div>
-          <span class="pill">状态：${data.statusText}</span>
-          <span class="pill">运单：${data.waybillMasked}</span>
-        </div>
-      `;
-      const events = (data.events || []).map(e => `
-        <div class="event">
-          <div>${e.desc}</div>
-          <div class="muted">${e.time}</div>
-        </div>
-      `).join("");
+    // 表格：显示与搜索匹配的“已发货网名”
+    let rows = shipped;
+    if (q) rows = shipped.filter(n => normalize(n).includes(q));
 
-      show(head + `<div class="timeline">${events || "<div class='muted'>暂无轨迹更新</div>"}</div>`);
-    }catch(err){
-      show(err.message || "出错了", true);
-    }finally{
-      btnEl.disabled = false;
+    $tbody.innerHTML = "";
+
+    // 查询结果：如果用户输入了网名，就给明确“已发货/未发货”
+    if (q){
+      const exact = shipped.some(n => normalize(n) === q);
+      if (exact){
+        showResult(`<span class="badge ok">已发货</span>已在名单中：<b>${qRaw}</b>`);
+      } else if (rows.length > 0){
+        showResult(`<span class="badge ok">已发货（模糊匹配）</span>你可能在找：<b>${rows.slice(0,3).join(" / ")}</b>`);
+      } else {
+        showResult(`<span class="badge no">未发货</span><b>${qRaw}</b> 不在已发货名单中（= 未发货或未登记）`);
+      }
+    } else {
+      $result.style.display = "none";
+      $result.innerHTML = "";
     }
+
+    if (!rows.length){
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 3;
+      td.className = "empty";
+      td.textContent = q ? "没有匹配到已发货名单。" : "暂无已发货名单数据。";
+      tr.appendChild(td);
+      $tbody.appendChild(tr);
+      return;
+    }
+
+    rows.forEach(nick => {
+      const tr = document.createElement("tr");
+
+      const tdNick = document.createElement("td");
+      tdNick.textContent = nick;
+      tr.appendChild(tdNick);
+
+      const tdStatus = document.createElement("td");
+      const b = document.createElement("span");
+      b.className = "badge ok";
+      b.textContent = "已发货";
+      tdStatus.appendChild(b);
+      tr.appendChild(tdStatus);
+
+      const tdNote = document.createElement("td");
+      tdNote.textContent = ""; // 你想加备注的话可以扩展 data.json
+      tr.appendChild(tdNote);
+
+      $tbody.appendChild(tr);
+    });
+  }
+
+  async function load(){
+    const res = await fetch("data.json?t=" + Date.now());
+    if(!res.ok) throw new Error("data.json 加载失败");
+    DATA = await res.json();
+    render();
+  }
+
+  $q.addEventListener("input", render);
+  $clearBtn.addEventListener("click", () => { $q.value=""; render(); });
+
+  load().catch(err => {
+    $updated.textContent = "加载失败：" + err.message;
   });
 </script>
 </body>
