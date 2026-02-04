@@ -11,10 +11,9 @@
       --glass-surface: rgba(255, 255, 255, 0.45);
       --glass-border: rgba(255, 255, 255, 0.6);
       --glass-shadow: 0 8px 32px rgba(255, 126, 179, 0.15);
-      --input-bg: rgba(255, 255, 255, 0.6);
     }
 
-    /* === 1. 动态粉色光效背景 === */
+    /* === 1. 动态背景 === */
     body {
       margin: 0;
       min-height: 100vh;
@@ -23,7 +22,6 @@
       background: linear-gradient(135deg, #ffc3a0 0%, #ffafbd 30%, #ffc3a0 60%, #ff9a9e 100%);
       background-size: 300% 300%;
       animation: gradientFlow 10s ease infinite;
-      position: relative;
       overflow-x: hidden;
     }
 
@@ -33,29 +31,20 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* === 2. 背景漂浮 Emoji (iOS 壁纸风格) === */
+    /* === 2. 漂浮 Emoji === */
     .bg-emoji-container {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; overflow: hidden;
     }
-
     .floater {
-      position: absolute;
-      font-size: 40px;
-      opacity: 0.35;
-      filter: blur(1px);
+      position: absolute; font-size: 40px; opacity: 0.35; filter: blur(1px);
       animation: floatAnim 6s ease-in-out infinite;
     }
-
     .f1 { top: 10%; left: 10%; animation-delay: 0s; font-size: 60px; }
     .f2 { top: 20%; right: 15%; animation-delay: 1s; font-size: 45px; }
     .f3 { bottom: 15%; left: 8%; animation-delay: 2s; font-size: 50px; }
     .f4 { bottom: 25%; right: 10%; animation-delay: 3s; font-size: 55px; }
     .f5 { top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 1.5s; font-size: 80px; opacity: 0.15; }
-
     @keyframes floatAnim {
       0%, 100% { transform: translateY(0) rotate(0deg); }
       50% { transform: translateY(-20px) rotate(5deg); }
@@ -63,14 +52,10 @@
 
     /* === 3. 主布局 === */
     main {
-      position: relative;
-      z-index: 1;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 40px 20px;
+      position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 40px 20px;
     }
 
-    /* === 4. iOS 26 风格毛玻璃卡片 === */
+    /* === 4. 卡片样式 === */
     .glass-card {
       background: var(--glass-surface);
       backdrop-filter: blur(30px) saturate(180%);
@@ -78,124 +63,104 @@
       border-radius: 30px;
       border: 1px solid var(--glass-border);
       box-shadow: var(--glass-shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-      padding: 28px;
-      margin-bottom: 24px;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding: 28px; margin-bottom: 24px;
+      transition: transform 0.3s;
     }
     .glass-card:hover { transform: scale(1.02); }
 
     h1 {
-      text-align: center;
-      font-size: 32px;
-      margin: 10px 0;
-      font-weight: 800;
+      text-align: center; font-size: 32px; margin: 10px 0; font-weight: 800;
       background: linear-gradient(to right, #d63384, #ff6b6b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 10px rgba(255, 107, 107, 0.2);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    
-    .subtitle {
-      text-align: center; font-size: 14px; opacity: 0.8; margin-bottom: 30px; font-weight: 500;
-    }
+    .subtitle { text-align: center; font-size: 14px; opacity: 0.8; margin-bottom: 30px; }
     h2 { font-size: 18px; color: #b03e6b; margin: 15px 0 10px; display: flex; align-items: center; gap: 8px; }
-    p, li { font-size: 15px; line-height: 1.6; margin: 6px 0; font-weight: 500; }
+    p, li { font-size: 15px; line-height: 1.6; margin: 6px 0; }
     .muted { font-size: 13px; opacity: 0.7; }
 
-    /* === 5. 超醒目的搜索区域 === */
-    .search-wrapper { position: relative; }
-
+    /* === 5. 输入框与按钮 === */
     input {
       width: 100%; padding: 18px 22px; font-size: 18px; border-radius: 22px;
       border: 2px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.7);
       color: #333; font-weight: bold; outline: none; box-sizing: border-box;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: all 0.3s;
+      transition: all 0.3s;
     }
     input:focus {
       background: #fff; border-color: var(--primary-pink);
       box-shadow: 0 0 0 6px rgba(255, 126, 179, 0.3); transform: translateY(-2px);
     }
-    input::placeholder { color: #aaa; font-weight: normal; }
 
     .btn-row { display: flex; gap: 12px; margin-top: 16px; }
-
     button {
       flex: 1; border: none; padding: 16px; font-size: 17px; font-weight: 700;
       border-radius: 20px; cursor: pointer; transition: all 0.2s;
-      display: flex; justify-content: center; align-items: center; gap: 6px;
     }
     #btn {
-      background: linear-gradient(135deg, #ff86ba, #ff5c8d);
-      color: white; box-shadow: 0 8px 20px rgba(255, 92, 141, 0.4);
+      background: linear-gradient(135deg, #ff86ba, #ff5c8d); color: white;
+      box-shadow: 0 8px 20px rgba(255, 92, 141, 0.4);
     }
     #btn:active { transform: scale(0.95); }
     #clear {
       background: rgba(255,255,255,0.5); color: #b03e6b; border: 1px solid rgba(255,255,255,0.8);
     }
-    #clear:hover { background: white; }
 
-    /* === 6. 结果展示动画 === */
+    /* === 6. 结果区域（BUG已修复） === */
+    /* 注意：这里不要写 display: none，通过 JS 控制父级容器的显隐 */
     .result-box {
-      display: none; margin-top: 20px; padding: 30px; border-radius: 24px;
+      margin-top: 20px; padding: 30px; border-radius: 24px;
       text-align: center; background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(40px);
       box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+      /* 动画 */
       animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
+
     @keyframes popUp {
       from { opacity: 0; transform: scale(0.8) translateY(20px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
     }
+
     .res-icon { font-size: 56px; display: block; margin-bottom: 12px; }
-    .res-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; display: block;}
-    .res-desc { font-size: 15px; opacity: 0.8; }
+    .res-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; display: block; }
     
-    /* 匹配到的名字高亮样式 */
+    /* 匹配的高亮名字 */
     .matched-name {
-        background: #ffe3f1;
-        color: #d63384;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-weight: bold;
-        display: inline-block;
-        margin: 4px 0;
-        border: 1px solid #ffb5d2;
+      background: #ffe3f1; color: #d63384; padding: 4px 12px;
+      border-radius: 12px; font-weight: bold; border: 1px solid #ffb5d2;
+      display: inline-block; margin-top: 5px;
     }
 
-    /* 状态颜色 */
     .is-ok { color: #28a745; border: 3px solid #b8e9c4; }
     .is-ok .res-title { color: #28a745; }
     .is-no { color: #ff5c8d; border: 3px solid #ffc2d6; }
     .is-no .res-title { color: #ff5c8d; }
+
+    /* 结果容器，默认隐藏 */
+    #result-container { display: none; }
   </style>
 </head>
 
 <body>
-
   <div class="bg-emoji-container">
-    <div class="floater f1">🐱</div>
-    <div class="floater f2">🐾</div>
-    <div class="floater f3">📦</div>
-    <div class="floater f4">💖</div>
-    <div class="floater f5">✨</div>
+    <div class="floater f1">🐱</div><div class="floater f2">🐾</div>
+    <div class="floater f3">📦</div><div class="floater f4">💖</div><div class="floater f5">✨</div>
   </div>
 
   <main>
     <h1>🐱 喵喵发货查询</h1>
-    <div class="subtitle">输入你的网名或关键词，查看礼物状态～✨</div>
+    <div class="subtitle">输入网名关键词，查看礼物状态～✨</div>
 
     <div class="glass-card">
       <h2>📣 喵喵广播站｜2026.2.4</h2>
-      <p>✨ <b>好消息！</b>今天有 31 位宝宝的礼物乘坐【京东快递】出发啦！🚀 快递小哥已经把包裹接走了，明天统一飞奔向你。</p>
-      
+      <p>✨ <b>好消息！</b>今天有 31 位宝宝的礼物已发出！🚀</p>
       <div style="background: rgba(255,255,255,0.4); padding: 12px; border-radius: 12px; margin: 10px 0;">
         <strong>🤔 如何查单号？</strong>
-        <p style="margin:4px 0 0; font-size:14px;">用你留的<b>收件手机号</b>登录微信【京东快递小程序】，就能看到物流啦！不用等喵私信哦～</p>
+        <p style="margin:4px 0 0; font-size:14px;">用<b>收件手机号</b>登录微信【京东快递小程序】查看物流。</p>
       </div>
-      <p class="muted">📦 预计周四下午更新物流；如果周五还没动静，记得来敲喵喵！</p>
+      <p class="muted">📦 预计周四下午更新物流；有问题随时来敲喵喵！</p>
     </div>
 
-    <div class="glass-card search-wrapper" style="border-color: rgba(255,255,255,0.9);">
+    <div class="glass-card search-wrapper">
       <h2 style="justify-content: center; margin-top:0;">🔍 查查我的礼物</h2>
       <div class="muted" id="updated" style="text-align:center; margin-bottom:15px;"></div>
 
@@ -203,20 +168,19 @@
 
       <div class="btn-row">
         <button id="btn" type="button">🐾 立即查询</button>
-        <button id="clear" type="button" class="secondary">🔄</button>
+        <button id="clear" type="button" id="clear">🔄</button>
       </div>
 
-      <div id="result"></div>
+      <div id="result-container"></div>
     </div>
 
     <div class="glass-card">
       <h2>🛡️ 防骗小贴士</h2>
       <ul>
-        <li>❌ 喵喵绝不会让你转账补邮费/解冻费！</li>
+        <li>❌ 绝不会让你转账补邮费/解冻费！</li>
         <li>❌ 陌生链接不要点，拿不准就截图问喵。</li>
-        <li>💖 本次活动不需要宝宝出任何费用，运费喵包啦。</li>
+        <li>💖 本次活动不需要宝宝出任何费用。</li>
       </ul>
-      <p class="muted" style="text-align: center; margin-top:10px;">目前支持模糊搜索，只要网名包含关键词即可查询哦~</p>
     </div>
   </main>
 
@@ -224,76 +188,102 @@
     const $q = document.getElementById("q");
     const $btn = document.getElementById("btn");
     const $clear = document.getElementById("clear");
-    const $result = document.getElementById("result");
+    const $container = document.getElementById("result-container");
     const $updated = document.getElementById("updated");
+
+    // === 内置默认数据 (防止没有 json 文件时报错) ===
+    const DEFAULT_DATA = {
+      lastUpdated: "2026.2.4 (示例数据)",
+      shippedNicks: [
+        "爱吃草莓的猫", "用户A", "小猫咪", "SuperStar", "陈大发"
+      ]
+    };
 
     let DATA = { lastUpdated: "", shippedNicks: [] };
 
+    // 初始化加载
+    async function load(){
+      try {
+        // 尝试加载 JSON 文件
+        const res = await fetch("data.json?t=" + Date.now());
+        if(!res.ok) throw new Error("File not found");
+        DATA = await res.json();
+      } catch(e) {
+        // 加载失败则使用内置默认数据（方便你测试）
+        console.log("未检测到 data.json，使用内置测试数据");
+        DATA = DEFAULT_DATA;
+        $updated.innerHTML = `⚠️ <span style="font-size:12px">演示模式 (未连接数据文件)</span>`;
+      }
+      
+      if(DATA.lastUpdated) {
+        $updated.innerHTML = `📅 名单更新：${DATA.lastUpdated}`;
+      }
+    }
+
     function normalize(s){ return String(s || "").trim().toLowerCase(); }
 
-    function show(type, title, text){
-      $result.style.display = "block";
-      $result.style.animation = 'none';
-      $result.offsetHeight; /* trigger reflow */
-      $result.style.animation = 'popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    function show(type, title, htmlContent){
+      // 1. 显示容器
+      $container.style.display = "block";
       
+      // 2. 生成 HTML
       const cls = type === "ok" ? "is-ok" : "is-no";
       const icon = type === "ok" ? "🎉" : "😿";
       
-      $result.innerHTML = `
+      $container.innerHTML = `
         <div class="result-box ${cls}">
           <span class="res-icon">${icon}</span>
           <span class="res-title">${title}</span>
-          <span class="res-desc">${text}</span>
+          <span class="res-desc">${htmlContent}</span>
         </div>
       `;
+      
+      // 3. 触发重绘以保证动画每次都播放
+      const $box = $container.querySelector('.result-box');
+      $box.style.animation = 'none';
+      $box.offsetHeight; /* trigger reflow */
+      $box.style.animation = 'popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     }
 
     function check(){
       const raw = String($q.value || "").trim();
       if(!raw){
-        $result.innerHTML = "";
+        $container.innerHTML = "";
+        $container.style.display = "none";
         return;
       }
+      
       const q = normalize(raw);
       const shipped = Array.isArray(DATA.shippedNicks) ? DATA.shippedNicks : [];
 
-      // === 修改：使用 find 找到具体匹配的名字 ===
-      // 如果你的输入包含在名单里，或者名单里的名字包含你的输入
+      // === 模糊搜索逻辑 ===
       const foundName = shipped.find(n => {
           const name = normalize(n);
+          // 双向包含匹配
           return name.includes(q) || q.includes(name);
       });
 
       if(foundName){
-        // 成功时，显示匹配到的具体名字
         show("ok", "已发货啦！", 
             `你的宝贝已经在路上狂奔啦<br>匹配网名：<span class="matched-name">${foundName}</span><br>请留意京东快递哦～🚚💨`);
       }else{
-        show("no", "暂未发货", "名单里暂时没找到包含该关键词的名字。<br>可能还没发出，或网名差异太大。");
+        show("no", "暂未发货", 
+            `名单里暂时没找到包含该关键词的名字。<br>当前搜索：<b>${raw}</b><br>可能还没发出，或网名差异太大。`);
       }
     }
 
-    async function load(){
-      try {
-        const res = await fetch("data.json?t=" + Date.now());
-        if(!res.ok) throw new Error("Load failed");
-        DATA = await res.json();
-        $updated.innerHTML = DATA.lastUpdated ? `📅 名单更新：${DATA.lastUpdated}` : "";
-      } catch(e) {
-        $updated.innerHTML = "⚠️ 数据加载中...";
-        console.log("请确保目录下有 data.json 文件");
-      }
-    }
-
+    // 绑定事件
     $btn.addEventListener("click", check);
     $q.addEventListener("keydown", (e) => { if(e.key === "Enter") check(); });
+    
     $clear.addEventListener("click", () => {
       $q.value = "";
       $q.focus();
-      $result.innerHTML = "";
+      $container.style.display = "none";
+      $container.innerHTML = "";
     });
 
+    // 启动
     load();
   </script>
 </body>
