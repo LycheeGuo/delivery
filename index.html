@@ -6,396 +6,410 @@
   <title>猫猫发货查询</title>
   <style>
     :root{
-      --bg1:#ffe6f0;
-      --bg2:#ffd1e5;
-      --card:#ffffffcc;
-      --pink:#ff5fa2;
+      --pink1:#ff4fa0;
       --pink2:#ff86ba;
+      --pink3:#ffd1e6;
+      --card:#ffffffcc;
       --text:#3a2b35;
       --line:#ffd1e5;
       --soft:#fff7fb;
+      --ok-bg:#fff0f7;
+      --ok-bd:#ffb5d2;
+      --ok-tx:#b0003a;
+      --no-bg:#f7fbff;
+      --no-bd:#cbe2ff;
+      --no-tx:#2457a6;
     }
+
+    /* 动态粉色背景：渐变流动 + 光斑漂移 */
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei";
       color:var(--text);
       min-height:100vh;
-      background: radial-gradient(1200px 600px at 15% 0%, #fff 0%, var(--bg1) 55%, var(--bg2) 100%);
-      display:flex; align-items:center; justify-content:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       padding:24px;
+
+      background: linear-gradient(120deg, #fff 0%, var(--pink3) 35%, #ffe6f2 65%, #fff 100%);
+      background-size: 200% 200%;
+      animation: bgMove 12s ease-in-out infinite;
+      overflow:hidden;
+      position:relative;
     }
-    .wrap{ width:min(920px, 100%); }
-    .header{ display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+    @keyframes bgMove{
+      0%{ background-position: 0% 50%; }
+      50%{ background-position: 100% 50%; }
+      100%{ background-position: 0% 50%; }
+    }
+
+    .blob{
+      position:absolute;
+      width:520px; height:520px;
+      border-radius:50%;
+      filter: blur(28px);
+      opacity:.55;
+      pointer-events:none;
+      mix-blend-mode: multiply;
+      animation: float 10s ease-in-out infinite;
+    }
+    .b1{ background: radial-gradient(circle at 30% 30%, var(--pink2), transparent 60%); top:-220px; left:-180px; }
+    .b2{ background: radial-gradient(circle at 60% 40%, var(--pink1), transparent 60%); bottom:-240px; right:-200px; animation-duration: 13s; }
+    .b3{ background: radial-gradient(circle at 40% 60%, #ffb7d6, transparent 60%); top: 40%; left: 55%; width:420px; height:420px; animation-duration: 15s; }
+
+    @keyframes float{
+      0%,100%{ transform: translate(0,0) scale(1); }
+      50%{ transform: translate(18px,-14px) scale(1.04); }
+    }
+
+    .wrap{ width:min(860px, 100%); position:relative; z-index:1; }
+
+    .header{
+      display:flex; align-items:center; gap:14px;
+      margin-bottom:14px;
+    }
+
+    /* 更萌的猫猫icon */
     .cat{
-      width:66px; height:66px;
+      width:70px; height:70px;
       filter: drop-shadow(0 14px 24px rgba(255,95,162,.25));
-      animation: floaty 2.6s ease-in-out infinite;
+      animation: bob 2.8s ease-in-out infinite;
+      flex:0 0 70px;
     }
-    @keyframes floaty{
+    @keyframes bob{
       0%,100%{ transform: translateY(0); }
-      50%{ transform: translateY(-4px); }
+      50%{ transform: translateY(-5px); }
     }
-    h1{ margin:0; font-size:22px; }
-    .sub{ margin:6px 0 0; opacity:.8; font-size:13px; line-height:1.4; }
+
+    h1{ margin:0; font-size:24px; letter-spacing:.3px; }
+    .sub{
+      margin:6px 0 0;
+      opacity:.82;
+      font-size:13px;
+      line-height:1.5;
+    }
 
     .card{
       background:var(--card);
       border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px;
+      border-radius:20px;
+      padding:18px;
       box-shadow: 0 18px 40px rgba(0,0,0,.08);
-      backdrop-filter: blur(10px);
-      margin-bottom:14px;
+      backdrop-filter: blur(12px);
     }
 
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:end; }
-    .row > *{ flex:1; min-width: 220px; }
-    label{ display:block; font-size:12px; opacity:.8; margin:8px 0 6px; }
-    input{
-      width:100%;
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:11px 12px;
-      font-size:14px;
-      outline:none;
-      background:#fff;
-    }
-    input:focus{
-      border-color: var(--pink2);
-      box-shadow:0 0 0 4px rgba(255,134,186,.25);
-    }
-
-    button{
-      border:0; border-radius:14px;
-      padding:11px 14px;
-      font-size:15px; color:#fff;
-      background: linear-gradient(135deg, var(--pink), var(--pink2));
-      cursor:pointer;
-      box-shadow:0 14px 26px rgba(255,95,162,.22);
-      white-space:nowrap;
-    }
-    .ghost{
-      background: #fff;
-      color: #b0003a;
-      border: 1px solid #ffb5d2;
-      box-shadow:none;
-    }
-
-    .stats{ display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; }
-    .pill{
-      display:inline-block;
-      font-size:12px;
-      padding:4px 10px;
-      border-radius:999px;
-      background:#ffe1ef;
-      border:1px solid #ffc2dc;
-    }
-    .muted{ opacity:.75; font-size:12px; }
-
-    .result{
-      margin-top:12px;
-      border:1px dashed #ffb5d2;
-      background:var(--soft);
-      border-radius:16px;
-      padding:12px;
-      display:none;
-    }
-    .badge{
-      display:inline-block;
-      padding:2px 8px;
-      border-radius:999px;
-      font-size:12px;
-      border:1px solid;
-      margin-right:8px;
-    }
-    .ok{ background:#fff0f7; border-color:#ffb5d2; color:#b0003a; }
-    .no{ background:#f7fbff; border-color:#cbe2ff; color:#2457a6; }
-
-    .table{
-      width:100%;
-      border-collapse: collapse;
-      margin-top:10px;
-      overflow:hidden;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#fff;
-    }
-    .table th, .table td{
-      padding:10px 10px;
-      border-bottom:1px solid #ffe1ef;
-      font-size:13px;
-      vertical-align:top;
-      text-align:left;
-    }
-    .table th{ background:var(--soft); font-weight:600; }
-    .empty{ padding:12px; font-size:13px; opacity:.75; }
-
-    /* 公告区块 */
     .notice{
       border:1px dashed #ffb5d2;
       background:var(--soft);
-      border-radius:16px;
-      padding:12px;
+      border-radius:18px;
+      padding:14px;
+      margin-bottom:14px;
     }
     .notice h2{ font-size:15px; margin:0 0 6px; }
     .notice h3{ font-size:14px; margin:12px 0 6px; }
     .notice p{ margin:6px 0; font-size:13px; line-height:1.65; }
     .notice ol{ margin:8px 0 0; padding-left:18px; }
     .notice ol li{ margin:6px 0; font-size:13px; }
-    .notice ul{ margin:8px 0 0; padding-left:18px; }
-    .notice ul li{ margin:6px 0; font-size:13px; }
-    .highlight{ font-weight:700; }
 
-    footer{ margin-top:10px; text-align:center; font-size:12px; opacity:.65; }
+    /* 超大查询区 */
+    .searchBox{
+      margin-top:10px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+    }
+    .bigInput{
+      flex:1;
+      min-width: 280px;
+      border:2px solid #ffc2dc;
+      border-radius:18px;
+      padding:16px 16px;
+      font-size:18px;
+      outline:none;
+      background:#fff;
+      box-shadow: 0 12px 24px rgba(255,95,162,.10);
+    }
+    .bigInput:focus{
+      border-color: var(--pink2);
+      box-shadow: 0 0 0 6px rgba(255,134,186,.22), 0 12px 24px rgba(255,95,162,.10);
+    }
+    .bigBtn{
+      border:0;
+      border-radius:18px;
+      padding:16px 18px;
+      font-size:17px;
+      color:#fff;
+      background: linear-gradient(135deg, var(--pink1), var(--pink2));
+      cursor:pointer;
+      box-shadow:0 16px 30px rgba(255,95,162,.25);
+      white-space:nowrap;
+    }
+    .ghostBtn{
+      border-radius:18px;
+      padding:16px 18px;
+      font-size:15px;
+      cursor:pointer;
+      border:1px solid #ffb5d2;
+      background:#fff;
+      color:#b0003a;
+    }
+
+    .metaRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      margin-top:10px;
+    }
+    .pill{
+      display:inline-block;
+      font-size:12px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#ffe1ef;
+      border:1px solid #ffc2dc;
+      opacity:.95;
+    }
+    .muted{ opacity:.75; font-size:12px; text-align:center; margin-top:8px; }
+
+    /* 结果卡（不显示任何名单，只给状态） */
+    .result{
+      margin-top:14px;
+      border-radius:18px;
+      padding:14px;
+      border:1px dashed #ffb5d2;
+      background:var(--soft);
+      display:none;
+      text-align:center;
+    }
+    .badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:13px;
+      border:1px solid;
+      margin-right:8px;
+      vertical-align:middle;
+    }
+    .ok{ background:var(--ok-bg); border-color:var(--ok-bd); color:var(--ok-tx); }
+    .no{ background:var(--no-bg); border-color:var(--no-bd); color:var(--no-tx); }
+
+    .safe{
+      margin-top:14px;
+      border:1px dashed #ffb5d2;
+      background:var(--soft);
+      border-radius:18px;
+      padding:14px;
+    }
+    .safe h2{ font-size:15px; margin:0 0 6px; }
+    .safe ul{ margin:8px 0 0; padding-left:18px; }
+    .safe li{ margin:6px 0; font-size:13px; line-height:1.6; }
+
+    footer{
+      margin-top:12px;
+      text-align:center;
+      font-size:12px;
+      opacity:.65;
+    }
   </style>
 </head>
+
 <body>
-<div class="wrap">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
 
-  <div class="header">
-    <!-- 更萌的猫猫：大眼+腮红 -->
-    <svg class="cat" viewBox="0 0 128 128" aria-hidden="true">
-      <defs>
-        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ff86ba"/>
-          <stop offset="1" stop-color="#ff5fa2"/>
-        </linearGradient>
-      </defs>
+  <div class="wrap">
+    <div class="header">
+      <!-- 萌猫猫（大眼+腮红） -->
+      <svg class="cat" viewBox="0 0 128 128" aria-hidden="true">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ff86ba"/>
+            <stop offset="1" stop-color="#ff4fa0"/>
+          </linearGradient>
+        </defs>
+        <path d="M28 42 L18 18 Q30 22 42 34 Z" fill="url(#g)"/>
+        <path d="M100 42 L110 18 Q98 22 86 34 Z" fill="url(#g)"/>
+        <path d="M28 54
+                 Q28 30 52 28
+                 Q64 20 76 28
+                 Q100 30 100 54
+                 V76
+                 Q100 104 64 104
+                 Q28 104 28 76 Z"
+              fill="#ffd6e8" stroke="#ffb5d2" stroke-width="3" />
+        <path d="M30 40 L24 26 Q32 28 40 36 Z" fill="#ffb5d2" opacity=".85"/>
+        <path d="M98 40 L104 26 Q96 28 88 36 Z" fill="#ffb5d2" opacity=".85"/>
+        <ellipse cx="50" cy="66" rx="10" ry="12" fill="#3a2b35"/>
+        <ellipse cx="78" cy="66" rx="10" ry="12" fill="#3a2b35"/>
+        <circle cx="46" cy="62" r="3.2" fill="#fff"/>
+        <circle cx="74" cy="62" r="3.2" fill="#fff"/>
+        <circle cx="38" cy="76" r="6" fill="#ff86ba" opacity=".55"/>
+        <circle cx="90" cy="76" r="6" fill="#ff86ba" opacity=".55"/>
+        <path d="M62 74 L66 74 L64 77 Z" fill="#ff4fa0"/>
+        <path d="M64 78
+                 Q60 82 56 80
+                 M64 78
+                 Q68 82 72 80"
+              fill="none" stroke="#3a2b35" stroke-width="3" stroke-linecap="round"/>
+        <path d="M22 70 H42 M22 78 H40" stroke="#ff4fa0" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+        <path d="M86 70 H106 M88 78 H106" stroke="#ff4fa0" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+      </svg>
 
-      <!-- 耳朵 -->
-      <path d="M28 42 L18 18 Q30 22 42 34 Z" fill="url(#g)"/>
-      <path d="M100 42 L110 18 Q98 22 86 34 Z" fill="url(#g)"/>
-
-      <!-- 脑袋 -->
-      <path d="M28 54
-               Q28 30 52 28
-               Q64 20 76 28
-               Q100 30 100 54
-               V76
-               Q100 104 64 104
-               Q28 104 28 76 Z"
-            fill="#ffd6e8" stroke="#ffb5d2" stroke-width="3" />
-
-      <!-- 内耳 -->
-      <path d="M30 40 L24 26 Q32 28 40 36 Z" fill="#ffb5d2" opacity=".85"/>
-      <path d="M98 40 L104 26 Q96 28 88 36 Z" fill="#ffb5d2" opacity=".85"/>
-
-      <!-- 眼睛 -->
-      <ellipse cx="50" cy="66" rx="10" ry="12" fill="#3a2b35"/>
-      <ellipse cx="78" cy="66" rx="10" ry="12" fill="#3a2b35"/>
-      <circle cx="46" cy="62" r="3.2" fill="#fff"/>
-      <circle cx="74" cy="62" r="3.2" fill="#fff"/>
-
-      <!-- 腮红 -->
-      <circle cx="38" cy="76" r="6" fill="#ff86ba" opacity=".55"/>
-      <circle cx="90" cy="76" r="6" fill="#ff86ba" opacity=".55"/>
-
-      <!-- 鼻子嘴巴 -->
-      <path d="M62 74 L66 74 L64 77 Z" fill="#ff5fa2"/>
-      <path d="M64 78
-               Q60 82 56 80
-               M64 78
-               Q68 82 72 80"
-            fill="none" stroke="#3a2b35" stroke-width="3" stroke-linecap="round"/>
-
-      <!-- 胡须 -->
-      <path d="M22 70 H42 M22 78 H40" stroke="#ff5fa2" stroke-width="3" stroke-linecap="round" opacity=".8"/>
-      <path d="M86 70 H106 M88 78 H106" stroke="#ff5fa2" stroke-width="3" stroke-linecap="round" opacity=".8"/>
-    </svg>
-
-    <div>
-      <h1>猫猫发货查询</h1>
-      <div class="sub">
-        输入网名查询是否已发货。<br>
-        说明：本页只维护“已发货名单”，不在名单中默认视为未发货/未登记。
-      </div>
-    </div>
-  </div>
-
-  <!-- 置顶公告：你提供的提示 -->
-  <div class="card">
-    <div class="notice">
-      <h2>周边更新｜2026.2.4</h2>
-
-      <p>今天一共寄出了 <span class="highlight">31 位宝宝</span> 的周边礼物，使用的是【京东快递】。</p>
-      <p>快递已由快递小哥今晚下单，明天统一发出。</p>
-
-      <h3>如何查询快递？</h3>
-      <p>请使用宝宝们当时留给喵的【收件手机号码】，登录微信【京东快递小程序】，即可直接查看实时物流信息。</p>
-      <p>喵就不再一个个私发单号啦～</p>
-      <p>📦 预计周四下午可以查询到物流信息；如果周五仍然查不到，可以来问喵，我会帮宝宝们一起确认。</p>
-
-      <h3>关于寄件信息的小说明</h3>
-      <ol>
-        <li>寄件人信息不是喵的，会显示为快递小哥的。</li>
-        <li>包裹统一从湖南衡阳发出，记得留意收快递哦～</li>
-        <li>为了避免寄送出错，收件人姓名填写的是宝宝们的番茄昵称。</li>
-      </ol>
-
-      <h3>重要提醒</h3>
-      <p>本次福利活动不需要宝宝们出任何费用，快递费全部由喵承担。</p>
-      <p>❗️任何涉及💰的信息都不要相信，如有疑问直接来问喵就好。</p>
-
-      <h3>关于未发出📦的宝宝</h3>
-      <p>二月之前一共有 46 位宝宝认领，是喵高估自己的整理速度T^T</p>
-      <p>今天还剩15位宝宝的礼物没来得及一起寄出，会和二月之后认领的宝宝一起发出。预计下周一之前寄出。</p>
-
-      <p class="muted" style="margin-top:10px;">谢谢宝宝们的理解和耐心等待(*≧ω≦)</p>
-    </div>
-  </div>
-
-  <!-- 查询 + 已发货名单 -->
-  <div class="card">
-    <div class="row">
       <div>
-        <label>网名查询（支持模糊）</label>
-        <input id="q" placeholder="例如：云栖晚晚 / 小怡 / 梦梦 …" autocomplete="off" />
-      </div>
-      <div style="flex:0 0 auto; display:flex; gap:10px;">
-        <button id="clearBtn" type="button" class="ghost">清空</button>
+        <h1>猫猫发货查询</h1>
+        <div class="sub">
+          只用于查询「是否已发货」。页面不会展示任何名单，也不会显示其他人的信息。
+        </div>
       </div>
     </div>
 
-    <div class="stats" id="stats"></div>
-    <div class="muted" id="updated"></div>
+    <!-- 网站内公告 -->
+    <div class="card">
+      <div class="notice">
+        <h2>周边更新｜2026.2.4</h2>
+        <p>今天一共寄出了 <b>31 位宝宝</b> 的周边礼物，使用的是【京东快递】。快递已由快递小哥今晚下单，明天统一发出。</p>
 
-    <div class="result" id="result"></div>
+        <h3>如何查询快递？</h3>
+        <p>请使用宝宝们当时留给喵的【收件手机号码】，登录微信【京东快递小程序】，即可直接查看实时物流信息。喵就不再一个个私发单号啦～</p>
+        <p>📦 预计周四下午可以查询到物流信息；如果周五仍然查不到，可以来问喵，我会帮宝宝们一起确认。</p>
 
-    <table class="table" aria-label="已发货名单">
-      <thead>
-        <tr>
-          <th style="width:60%;">网名（已发货）</th>
-          <th style="width:20%;">状态</th>
-          <th style="width:20%;">备注</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
+        <h3>关于寄件信息的小说明</h3>
+        <ol>
+          <li>寄件人信息不是喵的，会显示为快递小哥的。</li>
+          <li>包裹统一从湖南衡阳发出，记得留意收快递哦～</li>
+          <li>为了避免寄送出错，收件人姓名填写的是宝宝们的番茄昵称。</li>
+        </ol>
 
-    <div class="notice" style="margin-top:14px;">
-      <h2>防骗提醒（网站版）</h2>
-      <ul>
-        <li>我不会让你转账“补邮费/解冻费/保管费”，也不会让你提供验证码或银行卡信息。</li>
-        <li>不要点陌生链接/二维码，不要下载陌生App；不确定就截图来问我。</li>
-        <li>本页面只用于公布发货进度，不作为任何收费、中奖、退款等通知依据。</li>
-      </ul>
-      <p class="muted" style="margin-top:8px;">建议：网页里不要放手机号、地址等敏感信息。</p>
+        <h3>重要提醒</h3>
+        <p>本次福利活动不需要宝宝们出任何费用，快递费全部由喵承担。❗️任何涉及💰的信息都不要相信，如有疑问直接来问喵就好。</p>
+
+        <h3>关于未发出📦的宝宝</h3>
+        <p>二月之前一共有 46 位宝宝认领，今天还剩 15 位宝宝没来得及一起寄出，会和二月之后认领的宝宝一起发出，预计下周一之前寄出。</p>
+        <p style="opacity:.75;margin-top:8px;">谢谢宝宝们的理解和耐心等待(*≧ω≦)</p>
+      </div>
+
+      <!-- 超大搜索 -->
+      <div class="searchBox">
+        <input id="q" class="bigInput" placeholder="在这里输入你的网名（越完整越好）" autocomplete="off" />
+        <button id="btn" class="bigBtn" type="button">查询发货状态</button>
+        <button id="clearBtn" class="ghostBtn" type="button">清空</button>
+      </div>
+
+      <div class="metaRow" id="meta"></div>
+      <div class="muted" id="updated"></div>
+
+      <div class="result" id="result"></div>
+
+      <div class="safe">
+        <h2>防骗提醒</h2>
+        <ul>
+          <li>活动不需要宝宝们出任何费用：不会让你转账补邮费/解冻费/保管费。</li>
+          <li>不会向你索要验证码、银行卡信息，也不会让你下载陌生 App 或点击不明链接/二维码。</li>
+          <li>收到可疑消息先别操作，直接截图来问喵确认。</li>
+          <li>本页面只用于公告发货进度，不作为任何收费、中奖、退款通知依据。</li>
+        </ul>
+      </div>
+
+      <footer>粉粉猫猫守护你 ✿ฅ^•ﻌ•^ฅ✿</footer>
     </div>
-
-    <footer>粉粉猫猫守护你的包裹进度 🐾</footer>
   </div>
 
-</div>
+  <script>
+    const $q = document.getElementById("q");
+    const $btn = document.getElementById("btn");
+    const $clearBtn = document.getElementById("clearBtn");
+    const $result = document.getElementById("result");
+    const $meta = document.getElementById("meta");
+    const $updated = document.getElementById("updated");
 
-<script>
-  const $q = document.getElementById("q");
-  const $tbody = document.getElementById("tbody");
-  const $stats = document.getElementById("stats");
-  const $updated = document.getElementById("updated");
-  const $clearBtn = document.getElementById("clearBtn");
-  const $result = document.getElementById("result");
+    let DATA = { lastUpdated: "", shippedNicks: [] };
 
-  let DATA = { lastUpdated: "", shippedNicks: [] };
+    function normalize(s){
+      return String(s || "").trim().toLowerCase();
+    }
 
-  function normalize(s){
-    return String(s || "").trim().toLowerCase();
-  }
+    function maskEcho(input){
+      // 不回显“实际名称”：只显示“已查询”而不直接把网名原样打印
+      // 例如：显示前2后1，其余用*，长度很短就只显示“已查询”
+      const s = String(input || "").trim();
+      if (s.length <= 2) return "已查询";
+      if (s.length === 3) return s[0] + "*" + s[2];
+      return s.slice(0,2) + "*".repeat(Math.min(6, s.length - 3)) + s.slice(-1);
+    }
 
-  function showResult(html){
-    $result.style.display = "block";
-    $result.innerHTML = html;
-  }
+    function showResult(type, msg){
+      $result.style.display = "block";
+      const cls = type === "ok" ? "ok" : "no";
+      const title = type === "ok" ? "已发货" : "未发货";
+      $result.innerHTML = `<span class="badge ${cls}">${title}</span>${msg}`;
+    }
 
-  function render(){
-    const qRaw = String($q.value || "").trim();
-    const q = normalize(qRaw);
+    function renderMeta(){
+      $meta.innerHTML = "";
+      const shippedCount = Array.isArray(DATA.shippedNicks) ? DATA.shippedNicks.length : 0;
 
-    const shipped = Array.isArray(DATA.shippedNicks) ? DATA.shippedNicks : [];
-    const shippedCount = shipped.length;
+      const p1 = document.createElement("span");
+      p1.className = "pill";
+      p1.textContent = `已发货人数：${shippedCount}`;
+      $meta.appendChild(p1);
 
-    // 统计
-    $stats.innerHTML = "";
-    const pill1 = document.createElement("span");
-    pill1.className = "pill";
-    pill1.textContent = `已发货人数：${shippedCount}`;
-    $stats.appendChild(pill1);
+      const p2 = document.createElement("span");
+      p2.className = "pill";
+      p2.textContent = `页面不展示名单，仅返回状态`;
+      $meta.appendChild(p2);
 
-    const pill2 = document.createElement("span");
-    pill2.className = "pill";
-    pill2.textContent = `查询规则：不在名单=未发货/未登记`;
-    $stats.appendChild(pill2);
+      $updated.textContent = DATA.lastUpdated ? `名单更新日期：${DATA.lastUpdated}` : "";
+    }
 
-    $updated.textContent = DATA.lastUpdated ? `名单更新日期：${DATA.lastUpdated}` : "";
+    function check(){
+      const raw = String($q.value || "").trim();
+      const q = normalize(raw);
 
-    // 表格：按搜索过滤“已发货网名”
-    let rows = shipped;
-    if (q) rows = shipped.filter(n => normalize(n).includes(q));
-
-    $tbody.innerHTML = "";
-
-    // 查询结果提示
-    if (q){
-      const exact = shipped.some(n => normalize(n) === q);
-
-      if (exact){
-        showResult(`<span class="badge ok">已发货</span>已在名单中：<b>${qRaw}</b>`);
-      } else if (rows.length > 0){
-        showResult(`<span class="badge ok">已发货（模糊匹配）</span>你可能在找：<b>${rows.slice(0,3).join(" / ")}</b>`);
-      } else {
-        showResult(`<span class="badge no">未发货</span><b>${qRaw}</b> 不在已发货名单中（= 未发货或未登记）`);
+      if (!q){
+        $result.style.display = "none";
+        $result.innerHTML = "";
+        return;
       }
-    } else {
+
+      const shipped = Array.isArray(DATA.shippedNicks) ? DATA.shippedNicks : [];
+      const isShipped = shipped.some(n => normalize(n) === q);
+
+      const echoed = maskEcho(raw);
+
+      if (isShipped){
+        showResult("ok", `（${echoed}）已在本次已发货记录中～`);
+      } else {
+        showResult("no", `（${echoed}）暂未在已发货记录中：可能未发/未登记/网名有差异。可检查网名是否完全一致。`);
+      }
+    }
+
+    async function load(){
+      const res = await fetch("data.json?t=" + Date.now()); // 防缓存
+      if(!res.ok) throw new Error("data.json 加载失败");
+      DATA = await res.json();
+      renderMeta();
+    }
+
+    // 交互
+    $btn.addEventListener("click", check);
+    $q.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") check();
+    });
+    $clearBtn.addEventListener("click", () => {
+      $q.value = "";
+      $q.focus();
       $result.style.display = "none";
       $result.innerHTML = "";
-    }
-
-    if (!rows.length){
-      const tr = document.createElement("tr");
-      const td = document.createElement("td");
-      td.colSpan = 3;
-      td.className = "empty";
-      td.textContent = q ? "没有匹配到已发货名单。" : "暂无已发货名单数据。";
-      tr.appendChild(td);
-      $tbody.appendChild(tr);
-      return;
-    }
-
-    rows.forEach(nick => {
-      const tr = document.createElement("tr");
-
-      const tdNick = document.createElement("td");
-      tdNick.textContent = nick;
-      tr.appendChild(tdNick);
-
-      const tdStatus = document.createElement("td");
-      const b = document.createElement("span");
-      b.className = "badge ok";
-      b.textContent = "已发货";
-      tdStatus.appendChild(b);
-      tr.appendChild(tdStatus);
-
-      const tdNote = document.createElement("td");
-      tdNote.textContent = "";
-      tr.appendChild(tdNote);
-
-      $tbody.appendChild(tr);
     });
-  }
 
-  async function load(){
-    const res = await fetch("data.json?t=" + Date.now()); // 防缓存
-    if(!res.ok) throw new Error("data.json 加载失败");
-    DATA = await res.json();
-    render();
-  }
-
-  $q.addEventListener("input", render);
-  $clearBtn.addEventListener("click", () => { $q.value=""; render(); });
-
-  load().catch(err => {
-    $updated.textContent = "加载失败：" + err.message;
-  });
-</script>
-
+    load().catch(err => {
+      $updated.textContent = "加载失败：" + err.message;
+    });
+  </script>
 </body>
 </html>
