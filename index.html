@@ -8,7 +8,7 @@
     :root {
       --primary-pink: #ff7eb3;
       --deep-purple: #4a2c40;
-      --glass-surface: rgba(255, 255, 255, 0.45);
+      --glass-surface: rgba(255, 255, 255, 0.55); /* 稍微调高不透明度以适应长文字 */
       --glass-border: rgba(255, 255, 255, 0.6);
       --glass-shadow: 0 8px 32px rgba(255, 126, 179, 0.15);
     }
@@ -55,7 +55,7 @@
       position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 40px 20px;
     }
 
-    /* === 4. 卡片样式 === */
+    /* === 4. 卡片样式优化 (适配长文案) === */
     .glass-card {
       background: var(--glass-surface);
       backdrop-filter: blur(30px) saturate(180%);
@@ -66,17 +66,35 @@
       padding: 28px; margin-bottom: 24px;
       transition: transform 0.3s;
     }
-    .glass-card:hover { transform: scale(1.02); }
+    .glass-card:hover { transform: scale(1.01); }
 
     h1 {
-      text-align: center; font-size: 32px; margin: 10px 0; font-weight: 800;
+      text-align: center; font-size: 32px; margin: 10px 0 20px; font-weight: 800;
       background: linear-gradient(to right, #d63384, #ff6b6b);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 10px rgba(255, 107, 107, 0.2);
     }
-    .subtitle { text-align: center; font-size: 14px; opacity: 0.8; margin-bottom: 30px; }
-    h2 { font-size: 18px; color: #b03e6b; margin: 15px 0 10px; display: flex; align-items: center; gap: 8px; }
-    p, li { font-size: 15px; line-height: 1.6; margin: 6px 0; }
-    .muted { font-size: 13px; opacity: 0.7; }
+
+    /* 针对文案的排版优化 */
+    .anno-title {
+      font-size: 20px; color: #b0003a; margin-top: 0; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px; border-bottom: 2px dashed rgba(176, 0, 58, 0.1);
+      padding-bottom: 10px;
+    }
+    .section-title {
+      font-size: 17px; color: #d63384; margin: 24px 0 8px; font-weight: bold;
+      background: rgba(255,255,255,0.4); display: inline-block; padding: 4px 12px; border-radius: 12px;
+    }
+    
+    p, li { font-size: 15px; line-height: 1.7; margin: 6px 0; color: #4a2c40; font-weight: 500;}
+    ul { padding-left: 0; list-style: none; }
+    ul li { margin-bottom: 8px; }
+    
+    .highlight { color: #d63384; font-weight: bold; }
+    .warning-box { 
+      background: rgba(255, 0, 0, 0.05); border: 1px solid rgba(255,0,0,0.1); 
+      padding: 12px; border-radius: 12px; margin-top: 8px; color: #c00;
+    }
 
     /* === 5. 输入框与按钮 === */
     input {
@@ -89,6 +107,7 @@
       background: #fff; border-color: var(--primary-pink);
       box-shadow: 0 0 0 6px rgba(255, 126, 179, 0.3); transform: translateY(-2px);
     }
+    input::placeholder { color: #aaa; font-weight: normal; }
 
     .btn-row { display: flex; gap: 12px; margin-top: 16px; }
     button {
@@ -104,14 +123,14 @@
       background: rgba(255,255,255,0.5); color: #b03e6b; border: 1px solid rgba(255,255,255,0.8);
     }
 
-    /* === 6. 结果区域（BUG已修复） === */
-    /* 注意：这里不要写 display: none，通过 JS 控制父级容器的显隐 */
+    /* === 6. 结果区域 === */
+    #result-container { display: none; } /* 初始隐藏 */
+    
     .result-box {
       margin-top: 20px; padding: 30px; border-radius: 24px;
-      text-align: center; background: rgba(255, 255, 255, 0.85);
+      text-align: center; background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(40px);
       box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-      /* 动画 */
       animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -123,7 +142,6 @@
     .res-icon { font-size: 56px; display: block; margin-bottom: 12px; }
     .res-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; display: block; }
     
-    /* 匹配的高亮名字 */
     .matched-name {
       background: #ffe3f1; color: #d63384; padding: 4px 12px;
       border-radius: 12px; font-weight: bold; border: 1px solid #ffb5d2;
@@ -135,8 +153,6 @@
     .is-no { color: #ff5c8d; border: 3px solid #ffc2d6; }
     .is-no .res-title { color: #ff5c8d; }
 
-    /* 结果容器，默认隐藏 */
-    #result-container { display: none; }
   </style>
 </head>
 
@@ -148,20 +164,42 @@
 
   <main>
     <h1>🐱 喵喵发货查询</h1>
-    <div class="subtitle">输入网名关键词，查看礼物状态～✨</div>
-
+    
     <div class="glass-card">
-      <h2>📣 喵喵广播站｜2026.2.4</h2>
-      <p>✨ <b>好消息！</b>今天有 31 位宝宝的礼物已发出！🚀</p>
-      <div style="background: rgba(255,255,255,0.4); padding: 12px; border-radius: 12px; margin: 10px 0;">
-        <strong>🤔 如何查单号？</strong>
-        <p style="margin:4px 0 0; font-size:14px;">用<b>收件手机号</b>登录微信【京东快递小程序】查看物流。</p>
+      <h2 class="anno-title">✨ 周边更新｜2026.2.4</h2>
+      <p>今天一共寄出了 <b>31 位宝宝</b>的周边礼物，使用的是【京东快递】🚀。<br>
+      快递已由快递小哥今晚下单，明天统一发出。</p>
+
+      <div class="section-title">📱 如何查询快递？</div>
+      <p>请使用宝宝们当时留给喵的<b>【收件手机号码】</b>，登录微信【京东快递小程序】，即可直接查看实时物流信息。<br>
+      <span style="opacity:0.75; font-size:14px">喵就不再一个个私发单号啦～</span></p>
+      
+      <p>📦 预计周四下午可以查询到物流信息；<br>
+      如果周五仍然查不到，可以来问喵，我会帮宝宝们一起确认。</p>
+
+      <div class="section-title">📝 关于寄件信息的小说明</div>
+      <ul>
+        <li>1️⃣ 寄件人信息不是喵的，会显示为快递小哥的。</li>
+        <li>2️⃣ 包裹统一从<b>湖南衡阳</b>发出，记得留意收快递哦～</li>
+        <li>3️⃣ 为了避免寄送出错，收件人姓名填写的是宝宝们的<b>番茄昵称</b>。</li>
+      </ul>
+
+      <div class="section-title">⚠️ 重要提醒</div>
+      <div class="warning-box">
+        本次福利活动不需要宝宝们出任何费用，快递费全部由喵承担。<br>
+        <b>❗️任何涉及💰的信息都不要相信，如有疑问直接来问喵就好。</b>
       </div>
-      <p class="muted">📦 预计周四下午更新物流；有问题随时来敲喵喵！</p>
+
+      <div class="section-title">⏳ 关于未发出📦的宝宝</div>
+      <p>二月之前一共有 46 位宝宝认领，是喵高估自己的整理速度 T^T <br>
+      今天还剩 <b>15位宝宝</b> 的礼物没来得及一起寄出，会和二月之后认领的宝宝一起发出。<br>
+      <b>预计下周一之前寄出。</b></p>
+
+      <p style="text-align:center; margin-top:25px; opacity:0.8; font-size:14px;">谢谢宝宝们的理解和耐心等待 (*≧ω≦)</p>
     </div>
 
     <div class="glass-card search-wrapper">
-      <h2 style="justify-content: center; margin-top:0;">🔍 查查我的礼物</h2>
+      <h2 style="justify-content: center; margin-top:0; color:#4a2c40">🔍 查查我的礼物</h2>
       <div class="muted" id="updated" style="text-align:center; margin-bottom:15px;"></div>
 
       <input id="q" placeholder="输入网名关键词（支持模糊搜索）..." autocomplete="off" />
@@ -173,15 +211,6 @@
 
       <div id="result-container"></div>
     </div>
-
-    <div class="glass-card">
-      <h2>🛡️ 防骗小贴士</h2>
-      <ul>
-        <li>❌ 绝不会让你转账补邮费/解冻费！</li>
-        <li>❌ 陌生链接不要点，拿不准就截图问喵。</li>
-        <li>💖 本次活动不需要宝宝出任何费用。</li>
-      </ul>
-    </div>
   </main>
 
   <script>
@@ -191,9 +220,9 @@
     const $container = document.getElementById("result-container");
     const $updated = document.getElementById("updated");
 
-    // === 内置默认数据 (防止没有 json 文件时报错) ===
+    // ⚠️ 默认测试数据 (如果没连接 json 文件，就用这个测试)
     const DEFAULT_DATA = {
-      lastUpdated: "2026.2.4 (示例数据)",
+      lastUpdated: "2026.2.4",
       shippedNicks: [
         "爱吃草莓的猫", "用户A", "小猫咪", "SuperStar", "陈大发"
       ]
@@ -201,18 +230,14 @@
 
     let DATA = { lastUpdated: "", shippedNicks: [] };
 
-    // 初始化加载
     async function load(){
       try {
-        // 尝试加载 JSON 文件
         const res = await fetch("data.json?t=" + Date.now());
         if(!res.ok) throw new Error("File not found");
         DATA = await res.json();
       } catch(e) {
-        // 加载失败则使用内置默认数据（方便你测试）
-        console.log("未检测到 data.json，使用内置测试数据");
+        console.log("使用内置数据演示");
         DATA = DEFAULT_DATA;
-        $updated.innerHTML = `⚠️ <span style="font-size:12px">演示模式 (未连接数据文件)</span>`;
       }
       
       if(DATA.lastUpdated) {
@@ -223,10 +248,8 @@
     function normalize(s){ return String(s || "").trim().toLowerCase(); }
 
     function show(type, title, htmlContent){
-      // 1. 显示容器
       $container.style.display = "block";
       
-      // 2. 生成 HTML
       const cls = type === "ok" ? "is-ok" : "is-no";
       const icon = type === "ok" ? "🎉" : "😿";
       
@@ -238,28 +261,27 @@
         </div>
       `;
       
-      // 3. 触发重绘以保证动画每次都播放
+      // 触发动画重绘
       const $box = $container.querySelector('.result-box');
       $box.style.animation = 'none';
-      $box.offsetHeight; /* trigger reflow */
+      $box.offsetHeight; 
       $box.style.animation = 'popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     }
 
     function check(){
       const raw = String($q.value || "").trim();
       if(!raw){
-        $container.innerHTML = "";
         $container.style.display = "none";
+        $container.innerHTML = "";
         return;
       }
       
       const q = normalize(raw);
       const shipped = Array.isArray(DATA.shippedNicks) ? DATA.shippedNicks : [];
 
-      // === 模糊搜索逻辑 ===
+      // 模糊匹配逻辑
       const foundName = shipped.find(n => {
           const name = normalize(n);
-          // 双向包含匹配
           return name.includes(q) || q.includes(name);
       });
 
@@ -268,11 +290,10 @@
             `你的宝贝已经在路上狂奔啦<br>匹配网名：<span class="matched-name">${foundName}</span><br>请留意京东快递哦～🚚💨`);
       }else{
         show("no", "暂未发货", 
-            `名单里暂时没找到包含该关键词的名字。<br>当前搜索：<b>${raw}</b><br>可能还没发出，或网名差异太大。`);
+            `名单里没找到包含该关键词的名字<br>当前搜索：<b>${raw}</b><br>可能还没发出，或差异太大。`);
       }
     }
 
-    // 绑定事件
     $btn.addEventListener("click", check);
     $q.addEventListener("keydown", (e) => { if(e.key === "Enter") check(); });
     
@@ -283,7 +304,6 @@
       $container.innerHTML = "";
     });
 
-    // 启动
     load();
   </script>
 </body>
