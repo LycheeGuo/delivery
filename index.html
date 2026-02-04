@@ -20,8 +20,7 @@
       font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei";
       color:var(--text);
       min-height:100vh;
-      background:
-        radial-gradient(1200px 600px at 15% 0%, #fff 0%, var(--bg1) 55%, var(--bg2) 100%);
+      background: radial-gradient(1200px 600px at 15% 0%, #fff 0%, var(--bg1) 55%, var(--bg2) 100%);
       display:flex; align-items:center; justify-content:center;
       padding:24px;
     }
@@ -38,6 +37,7 @@
     }
     h1{ margin:0; font-size:22px; }
     .sub{ margin:6px 0 0; opacity:.8; font-size:13px; line-height:1.4; }
+
     .card{
       background:var(--card);
       border:1px solid var(--line);
@@ -45,7 +45,9 @@
       padding:16px;
       box-shadow: 0 18px 40px rgba(0,0,0,.08);
       backdrop-filter: blur(10px);
+      margin-bottom:14px;
     }
+
     .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:end; }
     .row > *{ flex:1; min-width: 220px; }
     label{ display:block; font-size:12px; opacity:.8; margin:8px 0 6px; }
@@ -62,6 +64,7 @@
       border-color: var(--pink2);
       box-shadow:0 0 0 4px rgba(255,134,186,.25);
     }
+
     button{
       border:0; border-radius:14px;
       padding:11px 14px;
@@ -71,6 +74,13 @@
       box-shadow:0 14px 26px rgba(255,95,162,.22);
       white-space:nowrap;
     }
+    .ghost{
+      background: #fff;
+      color: #b0003a;
+      border: 1px solid #ffb5d2;
+      box-shadow:none;
+    }
+
     .stats{ display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; }
     .pill{
       display:inline-block;
@@ -81,6 +91,7 @@
       border:1px solid #ffc2dc;
     }
     .muted{ opacity:.75; font-size:12px; }
+
     .result{
       margin-top:12px;
       border:1px dashed #ffb5d2;
@@ -99,6 +110,7 @@
     }
     .ok{ background:#fff0f7; border-color:#ffb5d2; color:#b0003a; }
     .no{ background:#f7fbff; border-color:#cbe2ff; color:#2457a6; }
+
     .table{
       width:100%;
       border-collapse: collapse;
@@ -117,22 +129,31 @@
     }
     .table th{ background:var(--soft); font-weight:600; }
     .empty{ padding:12px; font-size:13px; opacity:.75; }
+
+    /* 公告区块 */
     .notice{
-      margin-top:14px;
       border:1px dashed #ffb5d2;
       background:var(--soft);
       border-radius:16px;
       padding:12px;
     }
     .notice h2{ font-size:15px; margin:0 0 6px; }
+    .notice h3{ font-size:14px; margin:12px 0 6px; }
+    .notice p{ margin:6px 0; font-size:13px; line-height:1.65; }
+    .notice ol{ margin:8px 0 0; padding-left:18px; }
+    .notice ol li{ margin:6px 0; font-size:13px; }
     .notice ul{ margin:8px 0 0; padding-left:18px; }
-    .notice li{ margin:6px 0; font-size:13px; }
+    .notice ul li{ margin:6px 0; font-size:13px; }
+    .highlight{ font-weight:700; }
+
+    footer{ margin-top:10px; text-align:center; font-size:12px; opacity:.65; }
   </style>
 </head>
 <body>
 <div class="wrap">
+
   <div class="header">
-    <!-- 更萌的猫猫（大眼+腮红） -->
+    <!-- 更萌的猫猫：大眼+腮红 -->
     <svg class="cat" viewBox="0 0 128 128" aria-hidden="true">
       <defs>
         <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
@@ -159,7 +180,7 @@
       <path d="M30 40 L24 26 Q32 28 40 36 Z" fill="#ffb5d2" opacity=".85"/>
       <path d="M98 40 L104 26 Q96 28 88 36 Z" fill="#ffb5d2" opacity=".85"/>
 
-      <!-- 眼睛（大眼+高光） -->
+      <!-- 眼睛 -->
       <ellipse cx="50" cy="66" rx="10" ry="12" fill="#3a2b35"/>
       <ellipse cx="78" cy="66" rx="10" ry="12" fill="#3a2b35"/>
       <circle cx="46" cy="62" r="3.2" fill="#fff"/>
@@ -186,19 +207,52 @@
       <h1>猫猫发货查询</h1>
       <div class="sub">
         输入网名查询是否已发货。<br>
-        说明：本页只维护“已发货名单”，不在名单里就视为未发货/未登记。
+        说明：本页只维护“已发货名单”，不在名单中默认视为未发货/未登记。
       </div>
     </div>
   </div>
 
+  <!-- 置顶公告：你提供的提示 -->
+  <div class="card">
+    <div class="notice">
+      <h2>周边更新｜2026.2.4</h2>
+
+      <p>今天一共寄出了 <span class="highlight">31 位宝宝</span> 的周边礼物，使用的是【京东快递】。</p>
+      <p>快递已由快递小哥今晚下单，明天统一发出。</p>
+
+      <h3>如何查询快递？</h3>
+      <p>请使用宝宝们当时留给喵的【收件手机号码】，登录微信【京东快递小程序】，即可直接查看实时物流信息。</p>
+      <p>喵就不再一个个私发单号啦～</p>
+      <p>📦 预计周四下午可以查询到物流信息；如果周五仍然查不到，可以来问喵，我会帮宝宝们一起确认。</p>
+
+      <h3>关于寄件信息的小说明</h3>
+      <ol>
+        <li>寄件人信息不是喵的，会显示为快递小哥的。</li>
+        <li>包裹统一从湖南衡阳发出，记得留意收快递哦～</li>
+        <li>为了避免寄送出错，收件人姓名填写的是宝宝们的番茄昵称。</li>
+      </ol>
+
+      <h3>重要提醒</h3>
+      <p>本次福利活动不需要宝宝们出任何费用，快递费全部由喵承担。</p>
+      <p>❗️任何涉及💰的信息都不要相信，如有疑问直接来问喵就好。</p>
+
+      <h3>关于未发出📦的宝宝</h3>
+      <p>二月之前一共有 46 位宝宝认领，是喵高估自己的整理速度T^T</p>
+      <p>今天还剩15位宝宝的礼物没来得及一起寄出，会和二月之后认领的宝宝一起发出。预计下周一之前寄出。</p>
+
+      <p class="muted" style="margin-top:10px;">谢谢宝宝们的理解和耐心等待(*≧ω≦)</p>
+    </div>
+  </div>
+
+  <!-- 查询 + 已发货名单 -->
   <div class="card">
     <div class="row">
       <div>
         <label>网名查询（支持模糊）</label>
         <input id="q" placeholder="例如：云栖晚晚 / 小怡 / 梦梦 …" autocomplete="off" />
       </div>
-      <div style="flex:0 0 auto;">
-        <button id="clearBtn" type="button">清空</button>
+      <div style="flex:0 0 auto; display:flex; gap:10px;">
+        <button id="clearBtn" type="button" class="ghost">清空</button>
       </div>
     </div>
 
@@ -207,7 +261,7 @@
 
     <div class="result" id="result"></div>
 
-    <table class="table" id="table" aria-label="已发货名单">
+    <table class="table" aria-label="已发货名单">
       <thead>
         <tr>
           <th style="width:60%;">网名（已发货）</th>
@@ -218,17 +272,19 @@
       <tbody id="tbody"></tbody>
     </table>
 
-    <div class="notice">
-      <h2>防骗提醒（请务必看）</h2>
+    <div class="notice" style="margin-top:14px;">
+      <h2>防骗提醒（网站版）</h2>
       <ul>
-        <li>我不会以“补邮费 / 改地址 / 重新派送 / 理赔”为由让你转账，也不会让你点不明链接。</li>
-        <li>任何人向你要验证码、银行卡信息、让你下载陌生 App、或让你付“解冻费/保管费”，一律当诈骗。</li>
-        <li>收到可疑短信/私聊：先别操作，直接截图发我确认。</li>
-        <li>本页面只用于公布发货进度，不作为收费、中奖、退款等通知依据。</li>
+        <li>我不会让你转账“补邮费/解冻费/保管费”，也不会让你提供验证码或银行卡信息。</li>
+        <li>不要点陌生链接/二维码，不要下载陌生App；不确定就截图来问我。</li>
+        <li>本页面只用于公布发货进度，不作为任何收费、中奖、退款等通知依据。</li>
       </ul>
-      <div class="muted" style="margin-top:8px;">建议：尽量只用网名/代号，不要在网页里放手机号和地址。</div>
+      <p class="muted" style="margin-top:8px;">建议：网页里不要放手机号、地址等敏感信息。</p>
     </div>
+
+    <footer>粉粉猫猫守护你的包裹进度 🐾</footer>
   </div>
+
 </div>
 
 <script>
@@ -254,26 +310,33 @@
     const qRaw = String($q.value || "").trim();
     const q = normalize(qRaw);
 
-    const shipped = (DATA.shippedNicks || []);
+    const shipped = Array.isArray(DATA.shippedNicks) ? DATA.shippedNicks : [];
     const shippedCount = shipped.length;
 
+    // 统计
     $stats.innerHTML = "";
-    const pill = document.createElement("span");
-    pill.className = "pill";
-    pill.textContent = `已发货人数：${shippedCount}`;
-    $stats.appendChild(pill);
+    const pill1 = document.createElement("span");
+    pill1.className = "pill";
+    pill1.textContent = `已发货人数：${shippedCount}`;
+    $stats.appendChild(pill1);
 
-    $updated.textContent = DATA.lastUpdated ? `最后更新：${DATA.lastUpdated}` : "";
+    const pill2 = document.createElement("span");
+    pill2.className = "pill";
+    pill2.textContent = `查询规则：不在名单=未发货/未登记`;
+    $stats.appendChild(pill2);
 
-    // 表格：显示与搜索匹配的“已发货网名”
+    $updated.textContent = DATA.lastUpdated ? `名单更新日期：${DATA.lastUpdated}` : "";
+
+    // 表格：按搜索过滤“已发货网名”
     let rows = shipped;
     if (q) rows = shipped.filter(n => normalize(n).includes(q));
 
     $tbody.innerHTML = "";
 
-    // 查询结果：如果用户输入了网名，就给明确“已发货/未发货”
+    // 查询结果提示
     if (q){
       const exact = shipped.some(n => normalize(n) === q);
+
       if (exact){
         showResult(`<span class="badge ok">已发货</span>已在名单中：<b>${qRaw}</b>`);
       } else if (rows.length > 0){
@@ -312,7 +375,7 @@
       tr.appendChild(tdStatus);
 
       const tdNote = document.createElement("td");
-      tdNote.textContent = ""; // 你想加备注的话可以扩展 data.json
+      tdNote.textContent = "";
       tr.appendChild(tdNote);
 
       $tbody.appendChild(tr);
@@ -320,7 +383,7 @@
   }
 
   async function load(){
-    const res = await fetch("data.json?t=" + Date.now());
+    const res = await fetch("data.json?t=" + Date.now()); // 防缓存
     if(!res.ok) throw new Error("data.json 加载失败");
     DATA = await res.json();
     render();
@@ -333,5 +396,6 @@
     $updated.textContent = "加载失败：" + err.message;
   });
 </script>
+
 </body>
 </html>
